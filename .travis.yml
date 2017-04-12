@@ -1,0 +1,24 @@
+language: go
+sudo: false
+go:
+- 1.7.*
+- master
+env:
+  global:
+  - GO15VENDOREXPERIMENT=1
+  - TEST_TIMEOUT_SCALE=10
+cache:
+  directories:
+  - vendor
+install:
+- go get -v github.com/Masterminds/glide
+- cd $GOPATH/src/github.com/Masterminds/glide && go install && cd -
+- glide install
+- go install ./vendor/github.com/mattn/goveralls
+script:
+- go test -race -v
+after_success:
+- goveralls -service=travis-ci
+notifications:
+  slack:
+    secure: Chj8qKwfCJ5n0yqE7rIN80QL3W+s1PzCtUHuK7BGQtE4ZkUa8eQ0ElEtERIsdeUjNXZUkfxZWZyilVXOXl2KvXDD2f6FSZJ2r5z1ZGgFvQwpul/p5h6fCw8z/iapS8w8/3dkY0tV66/IzktEM6Vca2yv20s4b5KuNYT1GKRH/aBU6Fvpj63BwmIK4YwmJlm8KkEg5OlDNtu6KMpS4MVPlJG8cNll1DmU1EwFg4w+JAdRo2ENZLCa3GqiDh3phLNVkFTjDn773FxMQhlo8jAz7HjUAukat5OvZRuGt0aHf4ZoWzxBRlYpATwgGhGzdvt6y6m2Xmxkhu6VAprJf+m7fd+T49CGWVkL5+BDKQdpVEaZUkiPqpojRjFrUe79zrzwSsohHLqHjqlBHE8Egc2HRBi632FKT4TMU4g32VJiWGRM2YQBtsXwGS01hfU0f2YZ0I9jKwUNPvYcmotVmHKS69JLGOcH3NPaSkCVrpMzXsyLvYHjMdlucPV9TrS9s7Sktor4jDOIThBQ8J8OwYDQ6RtnPhRrjGOpKR8CvglhtCk3ADdtf5IZTEqbZvvvAqklz5/l6qbGQiM+EoYf34H5aDCCqWss7s88BolEax1t7pE8Ba35vzOaL7FIOCDBWzOggRsp8rjipicuYn3rgSek76NW7gMBre0eYS5wmWgLk90=
